@@ -23,12 +23,6 @@ library(visNetwork)
 library(RColorBrewer)
 library(igraph)
 
-# get the data
-all_files <- list.files(pattern = "*.rda")
-for(fil in all_files){
-    nVar <- gsub("\\.rda","",fil)
-    assign(nVar,readRDS(fil))
-}
 
 # Define UI for application that draws a histogram
 ui <- dashboardPage(
@@ -93,6 +87,14 @@ ui <- dashboardPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+    # get the data
+    all_files <- list.files(path="~/OneDrive - Victoria University of Wellington - STAFF/RScripts/2020-03-09-epidemic-dashboard", pattern = "*.rda",full.names = T)
+    for(fil in all_files){
+        nVar <- gsub("/Users/MLR/OneDrive - Victoria University of Wellington - STAFF/RScripts/2020-03-09-epidemic-dashboard/","",gsub("\\.rda","",fil))
+        
+        assign(nVar,readRDS(fil),envir = .GlobalEnv)
+    }
+    
     output$genomes <- renderValueBox({
         valueBox("Genomes", length(wt$membership), icon = icon("exclamation-triangle"), color = "green")
     })
